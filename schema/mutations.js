@@ -3,9 +3,11 @@ const {
   GraphQLString,
   GraphQLNonNull,
   GraphQLList,
+  GraphQLID,
 } = require("graphql");
 const BlogType = require("./types/blog");
 const Blog = require("../models/blog");
+const BlogInputType = require("./types/input/blog");
 
 const mutations = new GraphQLObjectType({
   name: "Mutation",
@@ -23,6 +25,24 @@ const mutations = new GraphQLObjectType({
           body,
           tags,
         });
+      },
+    },
+    editBlog: {
+      type: BlogType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLID),
+        },
+        blog: {
+          type: new GraphQLNonNull(BlogInputType),
+        },
+      },
+      async resolve(source, { id, blog }, req, info) {
+        return Blog.findOneAndUpdate(
+          { _id: id },
+          { $set: blog },
+          { new: true }
+        );
       },
     },
   },
