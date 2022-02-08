@@ -10,6 +10,7 @@ const Blog = require("../models/blog");
 const BlogInputType = require("./types/input/blog");
 const UserType = require("./types/user");
 const User = require("../models/user");
+const { isLoggedIn } = require("../utils");
 
 const mutations = new GraphQLObjectType({
   name: "Mutation",
@@ -22,7 +23,10 @@ const mutations = new GraphQLObjectType({
         tags: { type: new GraphQLList(GraphQLString) },
       },
       resolve: (source, { title, body, tags }, req, info) => {
+        isLoggedIn(req);
+
         return Blog.create({
+          author: req.user.id,
           title,
           body,
           tags,

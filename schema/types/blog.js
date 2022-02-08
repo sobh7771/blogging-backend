@@ -1,5 +1,6 @@
 const graphql = require("graphql");
 const { GraphQLDateTime } = require("graphql-scalars");
+const User = require("../../models/user");
 
 const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList } = graphql;
 
@@ -27,6 +28,12 @@ const BlogType = new GraphQLObjectType({
       },
       tags: {
         type: new GraphQLList(GraphQLString),
+      },
+      author: {
+        type: require("./user"),
+        resolve(user) {
+          return User.findById(user.author);
+        },
       },
     };
   },
