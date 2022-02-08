@@ -96,6 +96,26 @@ const mutations = new GraphQLObjectType({
         return user;
       },
     },
+    login: {
+      type: new GraphQLNonNull(UserType),
+      args: {
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(source, { email, password }, req, info) {
+        const user = await User.findByCredentials(email, password);
+
+        return new Promise((resolve, reject) => {
+          req.login(user, (err) => {
+            if (err) {
+              return reject();
+            }
+
+            resolve(user);
+          });
+        });
+      },
+    },
   },
 });
 
