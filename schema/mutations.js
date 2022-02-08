@@ -44,8 +44,10 @@ const mutations = new GraphQLObjectType({
         },
       },
       async resolve(source, { id, blog }, req, info) {
+        isLoggedIn(req);
+
         return Blog.findOneAndUpdate(
-          { _id: id },
+          { _id: id, author: req.user.id },
           { $set: blog },
           { new: true }
         );
