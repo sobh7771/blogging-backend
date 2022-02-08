@@ -2,6 +2,7 @@ const { GraphQLObjectType, GraphQLInt, GraphQLID } = require("graphql");
 const Blog = require("../models/blog");
 const BlogType = require("./types/blog");
 const BlogsEdgeType = require("./types/blogs-edge");
+const UserType = require("./types/user");
 
 const queries = new GraphQLObjectType({
   name: "Query",
@@ -46,6 +47,12 @@ const queries = new GraphQLObjectType({
       },
       resolve(_, { id }) {
         return Blog.findById(id);
+      },
+    },
+    viewer: {
+      type: UserType,
+      resolve(source, args, req, info) {
+        return req.user;
       },
     },
   },

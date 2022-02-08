@@ -87,6 +87,15 @@ const mutations = new GraphQLObjectType({
         });
       },
     },
+    logout: {
+      type: UserType,
+      resolve(_, __, req) {
+        const { user } = req;
+        req.logout();
+
+        return user;
+      },
+    },
   },
 });
 
