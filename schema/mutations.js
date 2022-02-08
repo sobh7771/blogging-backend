@@ -60,8 +60,10 @@ const mutations = new GraphQLObjectType({
           type: new GraphQLNonNull(GraphQLID),
         },
       },
-      async resolve(source, { id }, req, info) {
-        return Blog.findOneAndDelete({ _id: id });
+      async resolve(_, { id }, req) {
+        isLoggedIn(req);
+
+        return Blog.findOneAndDelete({ _id: id, author: req.user.id });
       },
     },
     signup: {
