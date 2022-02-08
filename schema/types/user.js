@@ -1,7 +1,9 @@
 const graphql = require("graphql");
 const { GraphQLDateTime } = require("graphql-scalars");
+const UsersEdge = require("./users-edge");
 
-const { GraphQLObjectType, GraphQLString, GraphQLID } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLID, GraphQLList, GraphQLInt } =
+  graphql;
 
 const UserType = new GraphQLObjectType({
   name: "User",
@@ -21,6 +23,14 @@ const UserType = new GraphQLObjectType({
       },
       updatedAt: {
         type: GraphQLDateTime,
+      },
+      followers: {
+        type: UsersEdge,
+        resolve: ({ followers }) => ({ total: followers.length }),
+      },
+      following: {
+        type: UsersEdge,
+        resolve: ({ following }) => ({ total: following.length }),
       },
     };
   },
