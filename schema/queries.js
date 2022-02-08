@@ -1,5 +1,6 @@
-const { GraphQLObjectType, GraphQLInt } = require("graphql");
+const { GraphQLObjectType, GraphQLInt, GraphQLID } = require("graphql");
 const Blog = require("../models/blog");
+const BlogType = require("./types/blog");
 const BlogsEdgeType = require("./types/blogs-edge");
 
 const queries = new GraphQLObjectType({
@@ -34,6 +35,17 @@ const queries = new GraphQLObjectType({
           nextCursor,
           total: count,
         };
+      },
+    },
+    blog: {
+      type: BlogType,
+      args: {
+        id: {
+          type: GraphQLID,
+        },
+      },
+      resolve(_, { id }) {
+        return Blog.findById(id);
       },
     },
   },
