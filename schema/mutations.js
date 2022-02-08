@@ -45,6 +45,17 @@ const mutations = new GraphQLObjectType({
         );
       },
     },
+    deleteBlog: {
+      type: BlogType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLID),
+        },
+      },
+      async resolve(source, { id }, req, info) {
+        return Blog.findOneAndDelete({ _id: id });
+      },
+    },
   },
 });
 
