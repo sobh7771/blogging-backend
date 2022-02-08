@@ -124,6 +124,27 @@ const mutations = new GraphQLObjectType({
         });
       },
     },
+    follow: {
+      type: UserType,
+      args: {
+        id: {
+          type: new GraphQLNonNull(GraphQLID),
+        },
+      },
+      async resolve(_, { id }, req) {
+        const currAuthUser = isLoggedIn(req);
+        const user = await User.findById(id);
+
+        if (!user) {
+          throw new Error("Not Found");
+        }
+
+        currAuthUser.following = [...currAuthUser.following, id];
+        user.followers = [...user.followers, currAuthUser._id];
+
+        Promise.all[(currAuthUser.save(), user.save())];
+      },
+    },
   },
 });
 
