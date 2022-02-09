@@ -81,6 +81,19 @@ const queries = new GraphQLObjectType({
         });
       },
     },
+    profile: {
+      type: UserType,
+      args: {
+        id: {
+          type: GraphQLID,
+        },
+      },
+      async resolve(_, { id }, req) {
+        isLoggedIn(req);
+
+        return User.findById(id);
+      },
+    },
   },
 });
 
