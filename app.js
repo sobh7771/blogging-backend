@@ -11,7 +11,8 @@ require("./services/passport");
 const path = require("path");
 const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
-const cookie = require("cookie-session");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 const schema = require("./schema");
 
@@ -20,12 +21,17 @@ const public = path.join(__dirname, "./build");
 const port = process.env.PORT;
 
 app.use(
-  cookie({
-    httpOnly: true,
-    secure: NODE_ENV === "production",
-    maxAge: 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY],
-    sameSite: true,
+  session({
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+    resave: false,
+    secret: process.env.SESS_SECRET,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      sameSite: true,
+      secure: NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   })
 );
 
