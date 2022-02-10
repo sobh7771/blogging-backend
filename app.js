@@ -26,6 +26,7 @@ app.use(
     resave: false,
     secret: process.env.SESS_SECRET,
     saveUninitialized: false,
+    proxy: true,
     cookie: {
       httpOnly: true,
       sameSite: true,
