@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
         message: "{VALUE} is not a valid email",
       },
       required: true,
+      index: true,
       unique: true,
       trim: true,
       lowercase: true,
@@ -64,4 +65,8 @@ UserSchema.statics.findByCredentials = async function (email, password) {
   });
 };
 
-module.exports = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
+
+User.createIndexes();
+
+module.exports = User;
